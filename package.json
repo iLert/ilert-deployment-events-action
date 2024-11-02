@@ -1,0 +1,17 @@
+{
+  "name": "ilert-deployment-events-action",
+  "version": "1.0.0",
+  "description": "GitHub action for ilert deployment events",
+  "main": "index.js",
+  "scripts": {},
+  "author": {
+    "name": "Christian Froehlingsdorf",
+    "email": "support@ilert.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "1.11.1",
+    "@actions/github": "6.0.0",
+    "axios": "1.7.7"
+  }
+}
