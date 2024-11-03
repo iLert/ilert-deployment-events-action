@@ -1,7 +1,7 @@
 name: 'ilert deployment events'
 description: 'Create an ilert deployment event'
 inputs:
-  api-key:
+  integration-key:
     description: 'The integration key that identifies the deployment pipeline the event relates to.'
     required: true
   custom-event:

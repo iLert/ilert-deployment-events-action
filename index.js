@@ -19,10 +19,10 @@ async function sendDeploymentEvent(payload) {
     }
 }
 
-function handleCustomEvent(summary, apiKey) {
+function handleCustomEvent(summary, integrationKey) {
 
     const deploymentEvent = {
-        apiKey,
+        apiKey: integrationKey,
         summary,
         timestamp: (new Date()).toISOString(),
         customDetails: {},
@@ -43,7 +43,7 @@ function handleCustomEvent(summary, apiKey) {
     let _ = sendDeploymentEvent(deploymentEvent);
 }
 
-function handlePushEvent(data, apiKey) {
+function handlePushEvent(data, integrationKey) {
 
     const {
         ref,
@@ -62,7 +62,7 @@ function handlePushEvent(data, apiKey) {
     const branch = parts[parts.length - 1];
 
     const deploymentEvent = {
-        apiKey,
+        apiKey: integrationKey,
         summary: `${senderLogin} pushed branch ${branch} from ${repoFullName}`.slice(0, 1024),
         timestamp: (new Date()).toISOString(),
         customDetails: {},
@@ -89,7 +89,7 @@ function handlePushEvent(data, apiKey) {
     let _ = sendDeploymentEvent(deploymentEvent);
 }
 
-function handlePullRequestEvent(data, apiKey) {
+function handlePullRequestEvent(data, integrationKey) {
 
     const {
         pull_request: {
@@ -117,7 +117,7 @@ function handlePullRequestEvent(data, apiKey) {
     } = data;
 
     const deploymentEvent = {
-        apiKey,
+        apiKey: integrationKey,
         summary: `PR merged - ${repoName} ${title}`.slice(0, 1024),
         timestamp: mergedAt,
         customDetails: {
@@ -160,16 +160,16 @@ function handlePullRequestEvent(data, apiKey) {
 }
 
 try {
-    const apiKey = core.getInput("api-key");
+    const integrationKey = core.getInput("integration-key");
     const customEvent = core.getInput("custom-event");
     const data = github.context.payload;
 
     if (typeof customEvent === "string" && customEvent !== "") {
-        handleCustomEvent(customEvent, apiKey);
+        handleCustomEvent(customEvent, integrationKey);
     } else if (github.context.eventName === "push") {
-        handlePushEvent(data, apiKey);
+        handlePushEvent(data, integrationKey);
     } else if (github.context.eventName === "pull_request" && data.action === "closed" && data.pull_request.merged) {
-        handlePullRequestEvent(data, apiKey);
+        handlePullRequestEvent(data, integrationKey);
     } else {
         console.log("No action taken. This event or action is not handled by this action.");
     }
