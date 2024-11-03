@@ -2,7 +2,7 @@ const core = require("@actions/core");
 const github = require("@actions/github");
 const axios = require("axios");
 
-const DEPLOYMENTS_URL = "https://api.ilert.dev/api/deployment-events";
+const DEPLOYMENTS_URL = "https://api.ilert.com/api/deployment-events";
 
 async function sendDeploymentEvent(payload) {
 
