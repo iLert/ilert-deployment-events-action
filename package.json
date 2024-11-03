@@ -1,6 +1,6 @@
 {
   "name": "ilert-deployment-events-action",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "GitHub action for ilert deployment events",
   "main": "index.js",
   "scripts": {},

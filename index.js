@@ -3,6 +3,7 @@ const github = require("@actions/github");
 const axios = require("axios");
 
 const DEPLOYMENTS_URL = "https://api.ilert.com/api/deployment-events";
+const GH_ACTION_VERSION = "1.0.1";
 
 async function sendDeploymentEvent(payload) {
 
@@ -21,20 +22,25 @@ async function sendDeploymentEvent(payload) {
 
 function handleCustomEvent(summary, integrationKey) {
 
+    const repository = process.env.GITHUB_REPOSITORY;
+
     const deploymentEvent = {
         apiKey: integrationKey,
         summary,
         timestamp: (new Date()).toISOString(),
-        customDetails: {},
+        customDetails: {
+            ilertDeploymentEventsAction: true,
+            githubActionVersion: GH_ACTION_VERSION
+        },
         // userEmail: "",
         // userName: "",
         // version: "",
         // environment: "",
         // commit: "",
-        // repository: "",
+        repository,
         links: [
             {
-                href: `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,
+                href: `${process.env.GITHUB_SERVER_URL}/${repository}/actions/runs/${process.env.GITHUB_RUN_ID}`,
                 text: "View run"
             }
         ]
@@ -65,7 +71,10 @@ function handlePushEvent(data, integrationKey) {
         apiKey: integrationKey,
         summary: `${senderLogin} pushed branch ${branch} from ${repoFullName}`.slice(0, 1024),
         timestamp: (new Date()).toISOString(),
-        customDetails: {},
+        customDetails: {
+            ilertDeploymentEventsAction: true,
+            githubActionVersion: GH_ACTION_VERSION
+        },
         // userEmail: "",
         userName: senderLogin,
         // version: "",
@@ -121,6 +130,8 @@ function handlePullRequestEvent(data, integrationKey) {
         summary: `PR merged - ${repoName} ${title}`.slice(0, 1024),
         timestamp: mergedAt,
         customDetails: {
+            ilertDeploymentEventsAction: true,
+            githubActionVersion: GH_ACTION_VERSION,
             body: body,
             repo: repoName,
             commits: commits,
